@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programme · Printemps du Livre de Montaigu 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#FFE000;font-family:Arial,sans-serif;color:#111;-webkit-font-smoothing:antialiased;}
+body{padding:0 0 2rem;}
+.hero{padding:1.5rem 1.25rem 1rem;}
+.hero-dates{font-family:'Arial Black',Arial,sans-serif;font-size:34px;font-weight:900;line-height:1;letter-spacing:-1px;color:#111;}
+.hero-name{font-family:'Arial Black',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;margin-top:8px;}
+.hero-name span{color:#D4006A;}
+.hero-sub{font-size:11px;color:#555;margin-top:3px;}
+
+.search-wrap{padding:0 1.25rem 0.75rem;position:relative;}
+.search{width:100%;height:40px;border:2px solid #111;background:#fff;font-family:Arial,sans-serif;font-size:14px;padding:0 36px 0 12px;outline:none;border-radius:0;color:#111;}
+.search::placeholder{color:#888;}
+.search-clear{position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;color:#888;display:none;padding:4px 8px;line-height:1;}
+.search-clear.active{display:block;}
+
+.filters-bar{position:sticky;top:0;z-index:10;background:#FFE000;padding:0.5rem 1.25rem 0.75rem;border-bottom:1px solid rgba(0,0,0,0.08);}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.filter-row:last-child{margin-bottom:0;}
+.pill{font-family:'Arial Black',Arial,sans-serif;font-size:11px;font-weight:700;padding:6px 12px;border:2px solid #111;background:transparent;color:#111;cursor:pointer;letter-spacing:0.04em;border-radius:0;white-space:nowrap;transition:all .12s;}
+.pill.active{background:#111;color:#FFE000;}
+.pill.cat-active{background:#D4006A;color:#fff;border-color:#D4006A;}
+.pill:hover:not(.active):not(.cat-active){background:rgba(0,0,0,0.06);}
+.pill-fort{background:#fff;}
+.pill-fort.active{background:#111;color:#FFE000;}
+.pill-fort::before{content:"★ ";color:#D4006A;}
+.pill-fort.active::before{color:#FFE000;}
+
+.results-meta{padding:0.75rem 1.25rem 0.5rem;font-size:11px;color:#555;display:flex;justify-content:space-between;align-items:center;}
+.reset{background:none;border:none;font-size:11px;color:#D4006A;cursor:pointer;font-weight:700;text-decoration:underline;padding:0;font-family:Arial,sans-serif;}
+
+.sessions-list{padding:0 1.25rem;}
+.day-group{margin-bottom:1.25rem;}
+.day-header{font-family:'Arial Black',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;color:#111;border-top:2px solid #111;padding-top:8px;margin:0.75rem 0 8px;text-transform:uppercase;}
+
+.card{background:#fff;border-radius:0;padding:0.75rem 0.875rem;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start;border-left:4px solid #FFE000;position:relative;}
+.card.rencontre{border-left-color:#D4006A;}
+.card.spectacle{border-left-color:#534AB7;}
+.card.atelier{border-left-color:#1D9E75;}
+.card.musical{border-left-color:#185FA5;}
+.card.projection{border-left-color:#444;}
+.card.exposition{border-left-color:#EF9F27;}
+
+.card-time{font-family:'Arial Black',Arial,sans-serif;font-size:18px;font-weight:900;color:#111;min-width:48px;line-height:1;padding-top:1px;letter-spacing:-0.02em;}
+.card-time-end{font-family:Arial,sans-serif;font-size:10px;font-weight:400;color:#888;margin-top:3px;letter-spacing:0;}
+.card-body{flex:1;min-width:0;}
+.card-cat{font-size:9px;font-weight:700;letter-spacing:0.12em;color:#888;margin-bottom:3px;text-transform:uppercase;}
+.card-title{font-family:'Arial Black',Arial,sans-serif;font-size:14px;font-weight:900;color:#111;line-height:1.25;}
+.card-lieu{font-size:11px;color:#555;margin-top:4px;font-weight:700;}
+.card-lieu::before{content:"📍 ";font-size:10px;}
+.card-detail{font-size:11px;color:#666;margin-top:3px;line-height:1.4;}
+.card-tags{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4;border-radius:0;}
+.tag-complet{background:#D8000C;color:#fff;}
+.tag-prix{background:#D4006A;color:#fff;}
+.tag-libre{background:#1D9E75;color:#fff;}
+.tag-fort{background:#FFE000;color:#111;border:1px solid #111;}
+.tag-jeunesse{background:#185FA5;color:#fff;}
+
+.empty{text-align:center;padding:2rem 1rem;color:#666;font-size:13px;}
+.empty-emoji{font-size:32px;margin-bottom:8px;}
+
+.legend-toggle{padding:0 1.25rem;margin-bottom:0.5rem;}
+.legend-btn{background:none;border:none;font-size:11px;color:#555;cursor:pointer;text-decoration:underline;font-family:Arial,sans-serif;padding:0;}
+.legend{padding:0.5rem 1.25rem 0.75rem;display:none;flex-wrap:wrap;gap:8px 14px;}
+.legend.open{display:flex;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#111;font-weight:700;}
+.leg-dot{width:10px;height:10px;flex-shrink:0;}
+
+.footer{text-align:center;padding:1.5rem 1.25rem 0.5rem;font-size:10px;color:#666;line-height:1.5;}
+.footer a{color:#D4006A;text-decoration:none;font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-dates">8·9·10<br>MAI 2026</div>
+  <div class="hero-name">Le <span>Printemps du Livre</span> de Montaigu</div>
+  <div class="hero-sub">Terres de Montaigu · Vendée · Entrée gratuite</div>
+</div>
+
+<div class="search-wrap">
+  <input type="text" id="search" class="search" placeholder="Rechercher un auteur, un événement..." autocomplete="off">
+  <button class="search-clear" id="searchClear" aria-label="Effacer">×</button>
+</div>
+
+<div class="filters-bar">
+  <div class="filter-row" id="dayFilters">
+    <button class="pill active" data-day="all">Tout</button>
+    <button class="pill" data-day="08">Ven 8</button>
+    <button class="pill" data-day="09">Sam 9</button>
+    <button class="pill" data-day="10">Dim 10</button>
+  </div>
+  <div class="filter-row" id="catFilters">
+    <button class="pill pill-fort" data-cat="fort">Temps forts</button>
+    <button class="pill" data-cat="rencontre">Rencontres</button>
+    <button class="pill" data-cat="spectacle">Spectacles</button>
+    <button class="pill" data-cat="atelier">Ateliers</button>
+    <button class="pill" data-cat="musical">Musique</button>
+    <button class="pill" data-cat="projection">Cinéma</button>
+    <button class="pill" data-cat="exposition">Visites</button>
+    <button class="pill" data-cat="jeunesse">Jeunesse</button>
+  </div>
+</div>
+
+<div class="results-meta">
+  <span id="count">86 événements</span>
+  <button class="reset" id="reset">Tout afficher</button>
+</div>
+
+<div class="legend-toggle">
+  <button class="legend-btn" id="legendBtn">Voir la légende des couleurs</button>
+</div>
+<div class="legend" id="legend">
+  <div class="leg"><div class="leg-dot" style="background:#D4006A"></div>Rencontre</div>
+  <div class="leg"><div class="leg-dot" style="background:#534AB7"></div>Spectacle</div>
+  <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div>Atelier</div>
+  <div class="leg"><div class="leg-dot" style="background:#185FA5"></div>Musique</div>
+  <div class="leg"><div class="leg-dot" style="background:#444"></div>Cinéma</div>
+  <div class="leg"><div class="leg-dot" style="background:#EF9F27"></div>Visite/Expo</div>
+</div>
+
+<div class="sessions-list" id="sessions"></div>
+
+<div class="footer">
+  Programme officiel sous réserve de modifications<br>
+  Source : <a href="https://printempsdulivre.terresdemontaigu.fr" target="_blank">printempsdulivre.terresdemontaigu.fr</a>
+</div>
+
+<script>
+const EVENTS = [{"day": "08", "start": "10h", "end": "12h30", "title": "Master class avec Olivier Casas", "cat": "projection", "lieu": "Cinéma Grand Écran", "detail": "Projection du film Frères et rencontre avec le réalisateur", "tags": ["fort"], "prix": "libre"}, {"day": "08", "start": "10h", "end": "11h30", "title": "Atelier avec l'illustratrice Carine Hinder", "cat": "atelier", "lieu": "Médiathèque Calliopé", "detail": "Réaliser un badge avec un personnage de Brume · Dès 8 ans", "complet": true, "tags": ["jeunesse"]}, {"day": "08", "start": "10h30", "end": "11h30", "title": "Une heure avec Michel Bussi", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Modération : Caroline Noel · Dédicaces 11h30→12h30", "tags": ["fort"]}, {"day": "08", "start": "11h", "end": "11h30", "title": "Spectacle : Mille secrets de poussins", "cat": "spectacle", "lieu": "Maison des associations", "detail": "Par le Collectif Quatre Ailes · Dès 3 ans", "tags": ["jeunesse"]}, {"day": "08", "start": "11h30", "end": "12h30", "title": "Dessin live · Léa Hybre", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "08", "start": "12h30", "end": "13h30", "title": "Petite fleur trio", "cat": "musical", "lieu": "Parc Henri Joyau", "detail": "Concert de chansons swing et jazz manouche"}, {"day": "08", "start": "12h30", "end": "13h30", "title": "Club lecture de TV Vendée", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Printemps des lecteurs"}, {"day": "08", "start": "13h30", "end": "15h", "title": "Atelier d'écriture poétique", "cat": "atelier", "lieu": "Maison des associations", "detail": "Avec Pauline Bilisari · Adulte · Sur inscription"}, {"day": "08", "start": "14h", "end": "15h", "title": "Polar et actualité", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Christophe Molmy & Angélina Delcroix · Mod. Caroline de Benedetti"}, {"day": "08", "start": "14h30", "end": "15h", "title": "Escale littéraire : Secrets de famille", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Yves Viollier & Laurent Nunez"}, {"day": "08", "start": "14h30", "end": "15h30", "title": "Dessin live · Bones", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "08", "start": "15h", "end": "15h30", "title": "Escale littéraire : Le grand témoin", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Boualem Sansal (Académie française) & Lisa Romain", "tags": ["fort"]}, {"day": "08", "start": "15h", "end": "16h", "title": "Violences faites aux femmes : regards croisés", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Julien Sandrel, Karine Reysset, Stephene Gillieux"}, {"day": "08", "start": "15h30", "end": "16h", "title": "Escale littéraire : Polars et thrillers", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Céline Denjean, Sonja Delzongle, Sandrine Destombes"}, {"day": "08", "start": "16h", "end": "16h30", "title": "Escale littéraire : Raconter le monde", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Stéphanie Perez & Laura Poggioli"}, {"day": "08", "start": "16h", "end": "17h", "title": "Cap sur l'île, embarquement immédiat !", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Lorraine Fouchet & Michèle Halberstadt"}, {"day": "08", "start": "16h", "end": "16h30", "title": "Visite flash · Exposition Brume", "cat": "exposition", "lieu": "Médiathèque Calliopé", "detail": "Animée par une médiatrice · 30 min"}, {"day": "08", "start": "16h", "end": "17h", "title": "Garçons s'il vous plaît !", "cat": "musical", "lieu": "Centre-ville (déambulation)", "detail": "Trio a cappella muni d'une ardoise de chansons"}, {"day": "08", "start": "16h30", "end": "17h", "title": "Escale littéraire : Un regard sur la France", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Franz-Olivier Giesbert"}, {"day": "08", "start": "16h30", "end": "17h", "title": "Spectacle : Mille secrets de poussins", "cat": "spectacle", "lieu": "Maison des associations", "detail": "Par le Collectif Quatre Ailes · Dès 3 ans", "tags": ["jeunesse"]}, {"day": "08", "start": "17h", "end": "18h", "title": "Enquêtes aux frontières du réel", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Henri Lœvenbruck & Joseph Macé-Scaron"}, {"day": "08", "start": "17h30", "end": "18h30", "title": "Dessin live · Lucie Castel", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "08", "start": "17h30", "end": "18h30", "title": "Le Temps du Président · Didier Decoin", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Échange ouvert à tous · Mod. Philippe Chauveau", "tags": ["fort"]}, {"day": "08", "start": "18h", "end": "19h", "title": "Récits du continent américain", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Brice Homs & Jamy Gourmaud"}, {"day": "08", "start": "18h30", "end": "19h15", "title": "Quand la réalité dépasse la fiction", "cat": "rencontre", "lieu": "Maison des associations", "detail": "Mo Malø & Nicolas Druart"}, {"day": "08", "start": "19h", "end": "19h45", "title": "Une heure avec Liane Foly", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Caroline Noel", "tags": ["fort"]}, {"day": "08", "start": "20h30", "end": "", "title": "Lecture musicale : Olivia Ruiz et ses musiciens", "cat": "musical", "lieu": "Théâtre de Thalie", "detail": "Roman ¡Vamos! · Lecture musicale", "complet": true, "tags": ["fort"], "prix": "payant"}, {"day": "09", "start": "10h", "end": "11h30", "title": "Do you speak and read in english ? avec Anna McPartlin", "cat": "atelier", "lieu": "Médiathèque Calliopé", "detail": "Rencontre inédite en anglais · Adulte", "prix": "libre"}, {"day": "09", "start": "10h30", "end": "11h30", "title": "Dessin live · Alexandre Arlène", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "09", "start": "10h30", "end": "12h", "title": "Lecture musicale : L'émerveillement", "cat": "musical", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Aurélie Valognes accompagnée de Louise Le Bars", "prix": "libre", "tags": ["fort"]}, {"day": "09", "start": "11h", "end": "11h30", "title": "Spectacle : Mille secrets de poussins", "cat": "spectacle", "lieu": "Maison des associations", "detail": "Par le Collectif Quatre Ailes · Dès 3 ans", "tags": ["jeunesse"]}, {"day": "09", "start": "11h", "end": "11h30", "title": "Cérémonie d'ouverture", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Lancement officiel de la 36e édition", "tags": ["fort"]}, {"day": "09", "start": "11h", "end": "12h", "title": "Visite guidée · Pauline Retailleau", "cat": "exposition", "lieu": "Départ : Parc Henri Joyau", "detail": "Histoire du parc et de la maison du Dr Fayau · 30 places max"}, {"day": "09", "start": "11h30", "end": "12h", "title": "Remise du Prix Ouest", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Lauréat 2026 : Louis Raymond pour Loin du Mékong", "tags": ["fort"]}, {"day": "09", "start": "11h30", "end": "12h30", "title": "Dessin live · Juliette Vaast", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "09", "start": "12h30", "end": "13h30", "title": "Petite fleur trio", "cat": "musical", "lieu": "Parc Henri Joyau", "detail": "Concert de chansons swing et jazz manouche"}, {"day": "09", "start": "14h", "end": "15h", "title": "Une heure avec Marie Vareille", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Caroline Noel"}, {"day": "09", "start": "14h", "end": "15h30", "title": "Lecture musicale : Sainte Emmerderesse", "cat": "musical", "lieu": "Maison des associations", "detail": "Audrey Alwett & Ameylia Saad Wu (harpiste)", "prix": "libre"}, {"day": "09", "start": "14h", "end": "17h", "title": "Projection 38 témoins + rencontre Didier Decoin", "cat": "projection", "lieu": "Cinéma Grand Écran", "detail": "Film inspiré du roman Est-ce ainsi que les femmes meurent ?", "prix": "libre", "tags": ["fort"]}, {"day": "09", "start": "14h30", "end": "15h", "title": "Escale littéraire : Rencontre avec le lauréat du Prix Ouest", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Louis Raymond"}, {"day": "09", "start": "14h30", "end": "15h30", "title": "Dessin live · Olivier Perret", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "09", "start": "15h", "end": "15h30", "title": "Escale littéraire : Famille de sang, famille de cœur", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Olivier Adam, Lorraine Fouchet, Christophe Boltanski"}, {"day": "09", "start": "15h", "end": "16h", "title": "Violences faites aux femmes : regards croisés", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Julien Sandrel, Karine Reysset, Stephene Gillieux"}, {"day": "09", "start": "15h30", "end": "16h", "title": "Escale littéraire : Le crépuscule des dieux", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Patrice Duhamel"}, {"day": "09", "start": "16h", "end": "16h30", "title": "Escale littéraire : Destins de femmes", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Séverine Cressan, Zoe Brisby, Sophie Tal Men"}, {"day": "09", "start": "16h", "end": "17h", "title": "Destins de femmes", "cat": "rencontre", "lieu": "Maison des associations", "detail": "Clarisse Sabard, Kalindi Ramphul, Fany Simon"}, {"day": "09", "start": "16h", "end": "16h45", "title": "Spectacle : Tout...I...Polichinelle !", "cat": "spectacle", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Par le Théâtre Sirocco · Dès 4 ans", "tags": ["jeunesse"]}, {"day": "09", "start": "16h", "end": "16h30", "title": "Visite flash · Exposition Brume", "cat": "exposition", "lieu": "Médiathèque Calliopé", "detail": "30 min"}, {"day": "09", "start": "16h", "end": "17h", "title": "Dessin live · Chevalier Gambette", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "09", "start": "16h", "end": "17h", "title": "Garçons s'il vous plaît !", "cat": "musical", "lieu": "Centre-ville (déambulation)", "detail": "Trio a cappella"}, {"day": "09", "start": "16h30", "end": "17h", "title": "Escale littéraire : Les méandres de la justice", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Nathalie Saint-Cricq & Max Monnehay"}, {"day": "09", "start": "16h30", "end": "17h30", "title": "Une heure avec Yasmina Khadra", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Lire Magazine", "tags": ["fort"]}, {"day": "09", "start": "17h", "end": "17h30", "title": "Escale littéraire : De la TV à l'écriture", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Jamy Gourmaud, Mac Lesggy, Olivier Delacroix"}, {"day": "09", "start": "17h", "end": "17h30", "title": "Visite flash · Exposition Brume", "cat": "exposition", "lieu": "Médiathèque Calliopé", "detail": "30 min"}, {"day": "09", "start": "17h30", "end": "18h30", "title": "Polar au féminin", "cat": "rencontre", "lieu": "Maison des associations", "detail": "Mathilde Beaussault, Meï Lepage, Céline Denjean"}, {"day": "09", "start": "17h30", "end": "18h", "title": "Escale littéraire : Histoires de famille", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Louis Raymond, Florent Oiseau, Gaëlle Nohant"}, {"day": "09", "start": "17h30", "end": "18h30", "title": "Les coulisses de l'écriture", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Claire Léost & Xavier de Moulins"}, {"day": "09", "start": "18h", "end": "18h45", "title": "Les livres qui font du bien", "cat": "rencontre", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Sophie Jomain, Cynthia Kafka, Le libraire se cache"}, {"day": "09", "start": "18h30", "end": "19h45", "title": "Concert dessiné : Nuit Noire", "cat": "musical", "lieu": "Cinéma Grand Écran", "detail": "Younn Locard, Ojûn, Titwann · Dès 12 ans · Sur les traces de Bernard Moitessier", "prix": "libre", "tags": ["fort"]}, {"day": "10", "start": "10h", "end": "12h15", "title": "Projection Les aventures de Rabbi Jacob + Jean-Philippe Daguerre", "cat": "projection", "lieu": "Cinéma Grand Écran", "detail": "Suivie d'une rencontre avec l'auteur de La femme qui n'aimait pas Rabbi Jacob", "prix": "libre"}, {"day": "10", "start": "10h30", "end": "11h", "title": "Escale littéraire : Figures de la vieillesse", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Karine Sulpice, Alexia Stresi, Gavin's Clemente Ruiz"}, {"day": "10", "start": "10h30", "end": "11h30", "title": "Une heure avec Boualem Sansal", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Auberi Maitrot (RCF Vendée)", "complet": true, "tags": ["fort"]}, {"day": "10", "start": "10h30", "end": "11h30", "title": "Dessin live · Hubert Maury", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "10", "start": "11h", "end": "11h30", "title": "Escale littéraire : Les fragilités de l'adolescence", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Gilles Paris & Gilles Marchand"}, {"day": "10", "start": "11h", "end": "11h45", "title": "Nouvelles voix, jeunes talents", "cat": "rencontre", "lieu": "Maison des associations", "detail": "Christopher Laquieze & Louis Raymond"}, {"day": "10", "start": "11h", "end": "11h45", "title": "Spectacle : Tout...I...Polichinelle !", "cat": "spectacle", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Par le Théâtre Sirocco · Dès 4 ans", "tags": ["jeunesse"]}, {"day": "10", "start": "11h", "end": "12h", "title": "Visite guidée · Pauline Retailleau", "cat": "exposition", "lieu": "Départ : Parc Henri Joyau", "detail": "Histoire du parc et de la maison du Dr Fayau · 30 places max"}, {"day": "10", "start": "11h30", "end": "12h30", "title": "Une heure avec Éric-Emmanuel Schmitt", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Christelle Capo-Chichi", "tags": ["fort"]}, {"day": "10", "start": "11h30", "end": "", "title": "Escale littéraire : Écrivains de Marine", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Didier Decoin, Katell Faria, Patrice Franceschi, Arnaud de La Grange, Amiral Loïc Finaz", "tags": ["fort"]}, {"day": "10", "start": "12h30", "end": "13h", "title": "Club lecture de TV Vendée", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Printemps des lecteurs"}, {"day": "10", "start": "12h30", "end": "13h30", "title": "Petite fleur trio", "cat": "musical", "lieu": "Parc Henri Joyau", "detail": "Concert de chansons swing et jazz manouche"}, {"day": "10", "start": "14h", "end": "15h", "title": "Une heure avec Natacha Calestrémé", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Christelle Capo-Chichi"}, {"day": "10", "start": "14h", "end": "17h", "title": "Atelier de reliure avec Pascale Chassagny", "cat": "atelier", "lieu": "Maison des associations", "detail": "Reliure « long stitch » · Adulte · Sur inscription"}, {"day": "10", "start": "14h30", "end": "15h", "title": "Escale littéraire : Le doux frisson du suspense", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Angélina Delcroix & Joseph Macé-Scaron"}, {"day": "10", "start": "14h30", "end": "15h15", "title": "Spectacle : Tout...I...Polichinelle !", "cat": "spectacle", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Par le Théâtre Sirocco · Dès 4 ans", "tags": ["jeunesse"]}, {"day": "10", "start": "14h30", "end": "15h30", "title": "Dessin live · Aude Maurel", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "10", "start": "15h", "end": "15h30", "title": "Escale littéraire : Sacrée famille !", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Alix de Saint-André, Adèle Fugère, Clémence Chambeslin, Grégory Nicolas"}, {"day": "10", "start": "15h30", "end": "16h", "title": "Escale littéraire : Écrire au féminin", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Delphine Giraud, Dorothée Saint-Paul, Cynthia Kafka"}, {"day": "10", "start": "15h30", "end": "16h30", "title": "Une heure avec Laure Manel", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Modération : Caroline Noel"}, {"day": "10", "start": "15h30", "end": "17h30", "title": "Spectacle de clôture : La Dictée", "cat": "spectacle", "lieu": "Chapiteau · Parc Henri Joyau", "detail": "Par la Cie Ram-Dam · Dès 10 ans", "tags": ["fort"]}, {"day": "10", "start": "16h", "end": "16h30", "title": "Escale littéraire : L'Histoire comme un roman", "cat": "rencontre", "lieu": "Chapiteau · Hôtel de Ville", "detail": "Gwenaël Bulteau & Mireille Calmel"}, {"day": "10", "start": "16h", "end": "17h", "title": "Dessin live · Mathis", "cat": "atelier", "lieu": "Chapiteau · Hôtel de Ville", "detail": ""}, {"day": "10", "start": "16h", "end": "16h30", "title": "Visite flash · Exposition Brume", "cat": "exposition", "lieu": "Médiathèque Calliopé", "detail": "30 min"}, {"day": "10", "start": "16h", "end": "17h", "title": "Garçons s'il vous plaît !", "cat": "musical", "lieu": "Centre-ville (déambulation)", "detail": "Trio a cappella"}, {"day": "10", "start": "16h30", "end": "17h30", "title": "Polar historique", "cat": "rencontre", "lieu": "Salle des fêtes", "detail": "Jacques Ravenne & Jean-Luc Bizien"}, {"day": "10", "start": "17h", "end": "17h30", "title": "Visite flash · Exposition Brume", "cat": "exposition", "lieu": "Médiathèque Calliopé", "detail": "30 min"}];
+
+const DAY_LABELS = {'08':'Vendredi 8 mai','09':'Samedi 9 mai','10':'Dimanche 10 mai'};
+const CAT_LABELS = {
+  rencontre:'Rencontre', spectacle:'Spectacle', atelier:'Atelier',
+  musical:'Musique', projection:'Cinéma', exposition:'Visite'
+};
+
+const state = { day:'all', cats:new Set(), query:'' };
+
+function normalize(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function matches(ev){
+  if(state.day !== 'all' && ev.day !== state.day) return false;
+
+  if(state.cats.size > 0){
+    let ok = false;
+    for(const c of state.cats){
+      if(c === 'fort'){
+        if((ev.tags||[]).includes('fort')) { ok = true; break; }
+      } else if(c === 'jeunesse'){
+        if((ev.tags||[]).includes('jeunesse')) { ok = true; break; }
+      } else {
+        if(ev.cat === c) { ok = true; break; }
+      }
+    }
+    if(!ok) return false;
+  }
+
+  if(state.query){
+    const q = normalize(state.query);
+    const haystack = normalize(ev.title + ' ' + (ev.detail||'') + ' ' + (ev.lieu||''));
+    if(!haystack.includes(q)) return false;
+  }
+
+  return true;
+}
+
+function timeToMinutes(t){
+  if(!t) return 9999;
+  const m = t.match(/(\d+)h(\d*)/);
+  if(!m) return 9999;
+  return parseInt(m[1])*60 + (m[2] ? parseInt(m[2]) : 0);
+}
+
+function render(){
+  const filtered = EVENTS.filter(matches);
+
+  document.getElementById('count').textContent =
+    filtered.length === 0 ? 'Aucun résultat' :
+    filtered.length === 1 ? '1 événement' :
+    filtered.length + ' événements';
+
+  if(filtered.length === 0){
+    document.getElementById('sessions').innerHTML =
+      '<div class="empty"><div class="empty-emoji">🔍</div>Aucun événement ne correspond à votre recherche.<br>Essayez d\'élargir les filtres.</div>';
+    return;
+  }
+
+  const days = state.day === 'all' ? ['08','09','10'] : [state.day];
+  let html = '';
+
+  days.forEach(d => {
+    const items = filtered.filter(s => s.day === d);
+    if(!items.length) return;
+    items.sort((a,b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+
+    html += '<div class="day-group"><div class="day-header">' + DAY_LABELS[d] + ' · ' + items.length + '</div>';
+
+    items.forEach(s => {
+      const tags = [];
+      if(s.complet) tags.push('<span class="tag tag-complet">Complet</span>');
+      if(s.prix === 'payant') tags.push('<span class="tag tag-prix">Payant</span>');
+      if(s.prix === 'libre') tags.push('<span class="tag tag-libre">Entrée libre</span>');
+      if((s.tags||[]).includes('fort')) tags.push('<span class="tag tag-fort">★ Temps fort</span>');
+      if((s.tags||[]).includes('jeunesse')) tags.push('<span class="tag tag-jeunesse">Jeunesse</span>');
+
+      const endStr = s.end ? '<div class="card-time-end">→ ' + s.end + '</div>' : '';
+      const detail = s.detail ? '<div class="card-detail">' + escapeHtml(s.detail) + '</div>' : '';
+      const tagsHtml = tags.length ? '<div class="card-tags">' + tags.join('') + '</div>' : '';
+
+      html += '<div class="card ' + s.cat + '">' +
+        '<div><div class="card-time">' + s.start + '</div>' + endStr + '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-cat">' + (CAT_LABELS[s.cat] || s.cat) + '</div>' +
+          '<div class="card-title">' + escapeHtml(s.title) + '</div>' +
+          '<div class="card-lieu">' + escapeHtml(s.lieu) + '</div>' +
+          detail +
+          tagsHtml +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('sessions').innerHTML = html;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.querySelectorAll('#dayFilters .pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.day = btn.dataset.day;
+    document.querySelectorAll('#dayFilters .pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+});
+
+document.querySelectorAll('#catFilters .pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const c = btn.dataset.cat;
+    if(state.cats.has(c)){
+      state.cats.delete(c);
+      btn.classList.remove('cat-active');
+      btn.classList.remove('active');
+    } else {
+      state.cats.add(c);
+      if(c === 'fort') btn.classList.add('active');
+      else btn.classList.add('cat-active');
+    }
+    render();
+  });
+});
+
+const searchInput = document.getElementById('search');
+const searchClear = document.getElementById('searchClear');
+searchInput.addEventListener('input', e => {
+  state.query = e.target.value;
+  searchClear.classList.toggle('active', !!state.query);
+  render();
+});
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  state.query = '';
+  searchClear.classList.remove('active');
+  render();
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  state.day = 'all';
+  state.cats.clear();
+  state.query = '';
+  searchInput.value = '';
+  searchClear.classList.remove('active');
+  document.querySelectorAll('#dayFilters .pill').forEach(b => b.classList.remove('active'));
+  document.querySelector('#dayFilters .pill[data-day="all"]').classList.add('active');
+  document.querySelectorAll('#catFilters .pill').forEach(b => { b.classList.remove('cat-active'); b.classList.remove('active'); });
+  render();
+});
+
+document.getElementById('legendBtn').addEventListener('click', () => {
+  const leg = document.getElementById('legend');
+  leg.classList.toggle('open');
+  document.getElementById('legendBtn').textContent =
+    leg.classList.contains('open') ? 'Masquer la légende' : 'Voir la légende des couleurs';
+});
+
+render();
+</script>
+</body>
+</html>
